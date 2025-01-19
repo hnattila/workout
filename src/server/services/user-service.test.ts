@@ -6,6 +6,13 @@ describe('UserService', () => {
     expect(userService).toBeDefined()
   })
 
+  test('empty db 2', async () => {
+    const result = await db.query.users.findMany()
+    expect(result?.length).toBe(0)
+    const result2 = await db.query.users.findMany()
+    expect(result2?.length).toBe(0)
+  })
+
   test('createUser', async () => {
     const email = 'heikki@localhost.local'
     const name = 'Heikki'

@@ -4,8 +4,6 @@ import { beforeEach, afterEach, vi } from 'vitest'
 
 import * as schema from '@/server/db/schema'
 
-console.log('hello')
-
 vi.mock('server-only', () => {
   return {
     // mock server-only module
@@ -13,13 +11,10 @@ vi.mock('server-only', () => {
 })
 
 beforeEach(async () => {
-  console.log('beforeEach')
-
   // process.env.DB_FILE_NAME = `file:${dbName}`
 
   if (process.env.DB_FILE_NAME && process.env.TESTBASE_DB_FILE_NAME) {
     if (process.env.DB_FILE_NAME.indexOf('test') >= 0) {
-      console.log('reset database')
       const _dbName = process.env.DB_FILE_NAME.replace('file:', '')
       await copyFile(process.env.TESTBASE_DB_FILE_NAME, _dbName)
     }
@@ -30,7 +25,6 @@ beforeEach(async () => {
 
   vi.mock('@/server/db', async importOriginal => {
     const _getDb = async () => {
-      console.log('_getDb called')
       const baseDbName = process.env.TESTBASE_DB_FILE_NAME
       if (
         baseDbName === undefined ||
@@ -50,7 +44,7 @@ beforeEach(async () => {
       return dbName
     }
     const __dbName = `file:${await _getDb()}`
-    console.log('beforeEach: db', __dbName)
+
     const db = drizzle(__dbName, { schema })
     return {
       ...(await importOriginal<typeof import('@/server/db')>()),
